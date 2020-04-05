@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Memory Game</title>
+
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <h1>Memory Game</h1>
+
+    <div id="app"></div>
+
+    <script src="./script.js"></script>
+    <script>
+        Game('#app', {
+            defaultLevel: 'normal',
+            flipCardTime: 1000,
+            levels: {
+                'easy': {
+                    total: 6,
+                    columns: 4,
+                    size: 200
+                },
+                'normal': {
+                    total: 10,
+                    columns: 5,
+                    size: 150
+                },
+                'hard': {
+                    total: 18,
+                    columns: 6,
+                    size: 100
+                }
+            }
+        });
+    </script>
+</body>
+</html>

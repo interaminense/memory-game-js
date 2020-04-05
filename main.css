@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+
+/* App */
+
+#app {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Board */
+
+.board {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    margin: 0 auto;
+}
+
+
+/* Card */
+
+.card {
+    position: relative;
+    perspective: 500px;
+}
+
+.card .card__content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: transform 1s;
+    transform-style: preserve-3d;
+}
+
+.card.flip .card__content {
+    transform: rotateY(180deg);
+    transition: transform 0.5s;
+}
+
+.card:not(.flip):active {
+    transform: scale(0.97);
+    transition: transform .2s;
+}
+
+.card .card__front-face, .card .card__back-face {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.card .card__front-face {
+    transform: rotateY(180deg);
+}
+
+.card .card__front-face img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.card .card__back-face {
+    background-color: #d9d9e6;
+}
+
+/* Time and Count flip */
+
+.time, .count-flips {
+    font-family: 'Abel', sans-serif;
+}
+
+.time {
+    font-size: 50px;
+}
+
+.count-flips {
+    font-size: 26px;
+    text-transform: uppercase;
+}
+
+.count-flips .count {
+    font-weight: bold;
+}
