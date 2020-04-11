@@ -42,62 +42,79 @@ const getTime = (time, showMs) => {
     return showMs ? `${formattedTime}:${ms}` : formattedTime; 
 }
 
+const getSelectedLevel = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const levelFromQuery = urlParams.get('level');
+
+    return levelFromQuery || 'normal';
+}
+
 // Constants
 
+const BTN_LABELS = {
+    'easy': 'EASY_LEVEL',
+    'normal': 'NORMAL_LEVEL',
+    'hard': 'HARD_LEVEL'
+}
+
 const TMPL = {
-    'COUNT_FLIPS': createElement(
-        `<div class="count-flips">
+    HEADER: createElement(`
+        <div class="header">
+            <h1 class="header__title">Memory Game</h1>
+        </div>
+    `),
+    FOOTER: createElement(`<div class="footer"></div>`),
+    COUNT_FLIPS: createElement(`
+        <div class="count-flips">
             flip count
             <span class="count"></span>
-        </div>`
-    ),
-    'CARD': (name, {size}) => createElement(
-        `
-            <div
-                class="card"
-                data-id="${name}"
-                style="width: ${size}px; height: ${size}px"
-            >
-                <div class="card__content">
-                    <div class="card__front-face">
-                        <img src="https://api.adorable.io/avatars/200/${name}.png" alt="" />
-                    </div>
-                    <div class="card__back-face"></div>
+        </div>
+    `),
+    CARD: (name, {size}) => createElement(`
+        <div
+            class="card"
+            data-id="${name}"
+            style="width: ${size}px; height: ${size}px"
+        >
+            <div class="card__content">
+                <div class="card__front-face">
+                    <img src="https://api.adorable.io/avatars/200/${name}.png" alt="" />
                 </div>
+                <div class="card__back-face"></div>
             </div>
-        `
-    ),
-    'BOARD': ({columns, size}) => createElement(`
+        </div>
+    `),
+    BOARD: ({columns, size}) => createElement(`
         <div
             class="board"
             style="grid-template-columns: repeat(${columns}, ${size}px);"
         ></div>
     `),
-    'CONTAINER_LEVEL': createElement(`
+    CONTAINER_LEVEL: createElement(`
         <div class="level">
             <div class="level__content"></div>
         </div>
     `),
-    'EASY_LEVEL': createElement(`
+    EASY_LEVEL: createElement(`
         <button class="btn-level" data-id="easy">easy</button>
     `),
-    'NORMAL_LEVEL': createElement(`
+    NORMAL_LEVEL: createElement(`
         <button class="btn-level" data-id="normal">normal</button>
     `),
-    'HARD_LEVEL': createElement(`
+    HARD_LEVEL: createElement(`
         <button class="btn-level" data-id="hard">hard</button>
     `),
-    'TIME': createElement(`<div class="time"></div>`)
+    TIME: createElement(`<div class="time"></div>`)
 };
 
 // Game
 
 const Game = (selector, options) => {
-    const {defaultLevel = 'normal', flipCardTime = 1000, levels} = options;
+    const {flipCardTime = 1000, levels} = options;
 
     const app = document.querySelector(selector);
 
-    const level = levels[defaultLevel];
+    const level = levels[getSelectedLevel()];
 
     let cards = [];
     
@@ -234,19 +251,8 @@ const Game = (selector, options) => {
         return countFlipsElement;
     }
 
-    /**
-     * Remove all eventlisteners attached in the document
-     */
-    const removeAllEventListeners = () => {
-        document.querySelectorAll('.card').forEach(card => card.removeEventListener('click', flipCard));
-
-        TMPL['CONTAINER_LEVEL'].removeEventListener('click', selectLevelGame);
-    }
-
     const selectLevelGame = ({target: {dataset: {id: lvl}}}) => {
-        removeAllEventListeners();
-
-        Game(selector, {...options, defaultLevel: lvl});
+        window.location.search = `level=${lvl}`;
     }
 
     /**
@@ -256,7 +262,9 @@ const Game = (selector, options) => {
         const containerLevel = TMPL['CONTAINER_LEVEL'];
         const containerLevelContent = containerLevel.querySelector('.level__content');
 
-        containerLevel.addEventListener('click', selectLevelGame)
+        TMPL[BTN_LABELS[getSelectedLevel()]].classList.add('selected');
+
+        containerLevel.addEventListener('click', selectLevelGame);
     
         containerLevelContent.appendChild(TMPL['EASY_LEVEL']);
         containerLevelContent.appendChild(TMPL['NORMAL_LEVEL']);
@@ -279,20 +287,35 @@ const Game = (selector, options) => {
         }, 1000);
     }
 
+    // const createHeader = () => {
+    //     const headerElement = TMPL['HEADER'];
+
+    //     return headerElement;
+    // }
+
     // Clear App
     app.innerHTML = "";
 
-    // Create count flips
-    app.appendChild(createCountFlips());
+    const header = TMPL['HEADER'];
+    const footer = TMPL['FOOTER'];
 
-    // Create time
-    app.appendChild(createTime());
-    
     // Create options to select level
-    app.appendChild(createLevelGame());
+    header.appendChild(createLevelGame());
 
+    // Add Header
+    app.appendChild(header);
+    
     // Add board game within App
     app.appendChild(createBoardGame());
+
+    // Create count flips
+    footer.appendChild(createCountFlips());
+    
+    // Create time
+    footer.appendChild(createTime());
+
+    // Add Footer
+    app.appendChild(footer);
 
     // Add Eventlistener in all cards
     document.querySelectorAll('.card').forEach(card => card.addEventListener('click', flipCard));
