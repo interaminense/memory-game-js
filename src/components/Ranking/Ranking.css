@@ -1,0 +1,39 @@
+#ranking {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.ranking-builder-table {
+  text-align: right;
+  box-shadow: 3px 2px 10px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  font-size: 0.8rem;
+}
+
+.ranking-builder-table thead tr {
+  background-color: #000;
+  color: #fff;
+}
+
+.ranking-builder-table tbody tr:nth-child(odd) {
+  background-color: #e0e0e0;
+}
+
+.ranking-builder-table tbody tr:nth-child(even) {
+  background-color: #fff;
+}
+
+.ranking-builder-table td,
+.ranking-builder-table th {
+  padding: 0.25rem;
+}
+
+.ranking-builder-table .align-right {
+  text-align: right;
+}
+
+.ranking-builder-table .align-right {
+  text-align: left;
+}
