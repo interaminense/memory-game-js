@@ -6,13 +6,10 @@ export function shuffle<T>(array: T[]): T[] {
   let temporaryValue;
   let randomIndex;
 
-  // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-    // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
 
-    // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
@@ -52,25 +49,11 @@ export function getSelectedLevel(): string {
 }
 
 export function calculateScore({
-  level,
   timeTaken,
   pairsMissed,
 }: {
-  level: Level;
   timeTaken: number;
   pairsMissed: number;
 }) {
-  let score = 0;
-
-  if (level === Level.Easy) {
-    score = 1000 - pairsMissed;
-  } else if (level === Level.Normal) {
-    score = 2000 - pairsMissed;
-  } else {
-    score = 3000 - pairsMissed;
-  }
-
-  score -= timeTaken;
-
-  return score || 0;
+  return 1000 - pairsMissed - timeTaken || 0;
 }

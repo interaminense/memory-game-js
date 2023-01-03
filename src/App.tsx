@@ -1,6 +1,7 @@
 import { RankingBuilder } from "ranking-builder";
-import { Game } from "./components/Game/Game";
+import { Game, Level } from "./components/Game/Game";
 import { Ranking } from "./components/Ranking/Ranking";
+import { getSelectedLevel } from "./utils";
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -13,15 +14,19 @@ const config = {
 };
 
 function App() {
-  const rankingBuilder = new RankingBuilder({ path: "memory-game-js" }, config);
+  const level = getSelectedLevel() as Level;
+  const rankingBuilder = new RankingBuilder(
+    { path: `memory-game-js/${level}` },
+    config
+  );
 
   // @ts-ignore
   window.rankingBuilder = rankingBuilder;
 
   return (
     <div className="App">
-      <Game rankingBuilder={rankingBuilder} />
-      <Ranking rankingBuilder={rankingBuilder} />
+      <Game level={level} rankingBuilder={rankingBuilder} />
+      <Ranking level={level} rankingBuilder={rankingBuilder} />
     </div>
   );
 }

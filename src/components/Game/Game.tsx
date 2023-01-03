@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { cards } from "../../constants";
 import {
   calculateScore,
-  getSelectedLevel,
   mapAssetsByName,
   secondsToTimeFormat,
   shuffle,
@@ -110,17 +109,92 @@ const GameContent: React.FC<IGameContentProps> = ({
 
   useEffect(() => {
     if (remainingPairs === 0) {
-      rankingBuilder.createUser({
-        name: "Adriano2",
-        score: calculateScore({
-          level: value,
-          timeTaken: timer,
-          pairsMissed: flipCount,
-        }),
-        time: secondsToTimeFormat(timer),
-      });
+      setTimeout(() => {
+        const name = prompt("Insert your name");
+
+        // eslint-disable-next-line no-restricted-globals
+        if (name) {
+          rankingBuilder.createUser({
+            name,
+            score: calculateScore({
+              timeTaken: timer,
+              pairsMissed: flipCount,
+            }),
+            time: secondsToTimeFormat(timer),
+          });
+        }
+      }, 1000);
     }
-  }, [flipCount, rankingBuilder, remainingPairs, timer, value]);
+  }, [flipCount, rankingBuilder, remainingPairs, timer]);
+
+  const onCardClick = (card: CardWithId) => {
+    setLock(true);
+    setStartTimer(true);
+
+    if (!firstCard) {
+      const firstCard = {
+        ...card,
+        flipped: true,
+      };
+
+      setFirstCard(firstCard);
+      setCards({
+        ...cards,
+        [card.id]: firstCard,
+      });
+      setLock(false);
+
+      return;
+    }
+
+    setFlipCount((count) => count + 1);
+    setCards({
+      ...cards,
+      [card.id]: {
+        ...card,
+        flipped: true,
+      },
+    });
+
+    if (firstCard.path === card.path && firstCard.id !== card.id) {
+      setCards({
+        ...cards,
+        [firstCard.id]: {
+          ...firstCard,
+          flipped: true,
+          matched: true,
+        },
+        [card.id]: {
+          ...card,
+          flipped: true,
+          matched: true,
+        },
+      });
+
+      setFirstCard(null);
+      setRemainingPairs(remainingPairs - 1);
+      setLock(false);
+
+      return;
+    }
+
+    setTimeout(() => {
+      setCards({
+        ...cards,
+        [firstCard.id]: {
+          ...firstCard,
+          flipped: false,
+        },
+        [card.id]: {
+          ...card,
+          flipped: false,
+        },
+      });
+
+      setFirstCard(null);
+      setLock(false);
+    }, 1000);
+  };
 
   return (
     <>
@@ -159,89 +233,18 @@ const GameContent: React.FC<IGameContentProps> = ({
               onClick={
                 firstCard?.id === id || matched || lock
                   ? () => {}
-                  : () => {
-                      const card = cards[key];
-
-                      setLock(true);
-                      setStartTimer(true);
-
-                      if (!firstCard) {
-                        const firstCard = {
-                          ...card,
-                          flipped: true,
-                        };
-
-                        setFirstCard(firstCard);
-
-                        setCards({
-                          ...cards,
-                          [card.id]: firstCard,
-                        });
-
-                        setLock(false);
-
-                        return;
-                      }
-
-                      setFlipCount((count) => count + 1);
-
-                      setCards({
-                        ...cards,
-                        [card.id]: {
-                          ...card,
-                          flipped: true,
-                        },
-                      });
-
-                      if (
-                        firstCard.path === card.path &&
-                        firstCard.id !== card.id
-                      ) {
-                        setCards({
-                          ...cards,
-                          [firstCard.id]: {
-                            ...firstCard,
-                            flipped: true,
-                            matched: true,
-                          },
-                          [card.id]: {
-                            ...card,
-                            flipped: true,
-                            matched: true,
-                          },
-                        });
-
-                        setFirstCard(null);
-                        setRemainingPairs(remainingPairs - 1);
-                        setLock(false);
-
-                        return;
-                      }
-
-                      setTimeout(() => {
-                        setCards({
-                          ...cards,
-                          [firstCard.id]: {
-                            ...firstCard,
-                            flipped: false,
-                          },
-                          [card.id]: {
-                            ...card,
-                            flipped: false,
-                          },
-                        });
-
-                        setFirstCard(null);
-                        setLock(false);
-                      }, 1000);
-                    }
+                  : () => onCardClick(cards[key])
               }
               style={{ width: size, height: size }}
             >
               <div className="card__content">
-                <div className="card__front-face">
-                  <img src={path} alt={path} />
-                </div>
+                <div
+                  className="card__front-face"
+                  style={{
+                    backgroundImage: `url(${path})`,
+                    backgroundSize: size,
+                  }}
+                />
                 <div className="card__back-face" />
               </div>
             </div>
@@ -260,19 +263,24 @@ const GameContent: React.FC<IGameContentProps> = ({
 };
 
 export function Game({
+  level,
   rankingBuilder,
 }: {
+  level: Level;
   rankingBuilder: RankingBuilder<{
     path: string;
   }>;
 }) {
-  const level = levels[getSelectedLevel() as Level];
-  const duplicatedCards: Card[] = shuffle([...level.cards, ...level.cards]);
+  const objectLevel = levels[level];
+  const duplicatedCards: Card[] = shuffle([
+    ...objectLevel.cards,
+    ...objectLevel.cards,
+  ]);
 
   return (
     <GameContent
       cards={mapAssetsByName(duplicatedCards)}
-      level={level}
+      level={objectLevel}
       rankingBuilder={rankingBuilder}
     />
   );

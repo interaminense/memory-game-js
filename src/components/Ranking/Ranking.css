@@ -12,6 +12,12 @@
   font-size: 0.8rem;
 }
 
+.ranking-builder-table caption {
+  background-color: #3f51b5;
+  color: #fff;
+  padding: 0.25rem;
+}
+
 .ranking-builder-table thead tr {
   background-color: #000;
   color: #fff;
