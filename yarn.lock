@@ -8028,10 +8028,10 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
-ranking-builder@^1.1.7:
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/ranking-builder/-/ranking-builder-1.1.9.tgz#796dd85734b883ef9862ff75b1ec4de021be5171"
-  integrity sha512-QXYxUsRT5x7oSUEEicXf+73Ars92eMwIMKdnbJeLQIYHSQkp6pPdFu3d1ViEtoBy7uyx0h2pQBK+kyVijtRwXg==
+ranking-builder@^1.1.14:
+  version "1.1.14"
+  resolved "https://registry.yarnpkg.com/ranking-builder/-/ranking-builder-1.1.14.tgz#8581f907b041767dd453238a805c84e0bfe56cd1"
+  integrity sha512-h4SXRrl3+7AYxYCWhadfqJ96i1/kihgSxmQLFMMizQ2W0wBM8/dlQk1tZG7RNQQkro7RY29wtWnKZaKQuvRMew==
   dependencies:
     "@types/uuid" "^9.0.0"
     firebase "^9.15.0"

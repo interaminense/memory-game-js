@@ -12,6 +12,10 @@ import classNames from "classnames";
 import "./Game.css";
 import { RankingBuilder } from "ranking-builder";
 
+// @ts-ignore
+import confetti from "https://cdn.skypack.dev/canvas-confetti@1";
+import { Modal } from "../Modal/Modal";
+
 export interface Card {
   flipped: boolean;
   matched: boolean;
@@ -67,15 +71,13 @@ const levels: TLevels = {
 interface IGameContentProps {
   cards: { [key: string]: CardWithId };
   level: TLevel;
-  rankingBuilder: RankingBuilder<{
-    path: string;
-  }>;
+  onFinish: (userData: { timer: number; flipCount: number }) => void;
 }
 
 const GameContent: React.FC<IGameContentProps> = ({
   cards: initialCards,
   level: { columns, size, total, value },
-  rankingBuilder,
+  onFinish,
 }) => {
   const [lock, setLock] = useState(false);
   const [timer, setTimer] = useState(0);
@@ -109,25 +111,15 @@ const GameContent: React.FC<IGameContentProps> = ({
 
   useEffect(() => {
     if (remainingPairs === 0) {
-      setTimeout(() => {
-        const name = prompt("Insert your name");
-
-        // eslint-disable-next-line no-restricted-globals
-        if (name) {
-          rankingBuilder.createUser({
-            name,
-            score: calculateScore({
-              timeTaken: timer,
-              pairsMissed: flipCount,
-            }),
-            time: secondsToTimeFormat(timer),
-          });
-        }
-      }, 1000);
+      setTimeout(() => onFinish({ timer, flipCount }), 1000);
     }
-  }, [flipCount, rankingBuilder, remainingPairs, timer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flipCount, remainingPairs, timer]);
 
-  const onCardClick = (card: CardWithId) => {
+  const onCardClick = (
+    card: CardWithId,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     setLock(true);
     setStartTimer(true);
 
@@ -175,6 +167,17 @@ const GameContent: React.FC<IGameContentProps> = ({
       setRemainingPairs(remainingPairs - 1);
       setLock(false);
 
+      confetti({
+        gravity: 3,
+        decay: 0.95,
+        particleCount: 150,
+        origin: {
+          x: event.clientX / window.innerWidth,
+          y: event.clientY / window.innerHeight,
+        },
+        spread: 60,
+      });
+
       return;
     }
 
@@ -205,6 +208,7 @@ const GameContent: React.FC<IGameContentProps> = ({
           <div className="level__content">
             {Object.keys(levels).map((key) => (
               <button
+                key={key}
                 onClick={() => (window.location.search = `level=${key}`)}
                 className={classNames("btn-level", {
                   selected: value === key,
@@ -233,7 +237,7 @@ const GameContent: React.FC<IGameContentProps> = ({
               onClick={
                 firstCard?.id === id || matched || lock
                   ? () => {}
-                  : () => onCardClick(cards[key])
+                  : (event) => onCardClick(cards[key], event)
               }
               style={{ width: size, height: size }}
             >
@@ -276,12 +280,127 @@ export function Game({
     ...objectLevel.cards,
     ...objectLevel.cards,
   ]);
+  const [showModal, setShowModal] = useState(true);
+  const [view, setView] = useState<"start" | "finish">("start");
+  const [name, setName] = useState("");
+  const [userData, setUserData] = useState<{
+    timer: number;
+    flipCount: number;
+  }>({ timer: 0, flipCount: 0 });
+  const [nameValid, setNameValid] = useState(true);
 
   return (
-    <GameContent
-      cards={mapAssetsByName(duplicatedCards)}
-      level={objectLevel}
-      rankingBuilder={rankingBuilder}
-    />
+    <>
+      <GameContent
+        cards={mapAssetsByName(duplicatedCards)}
+        level={objectLevel}
+        onFinish={(userData) => {
+          setUserData(userData);
+          setShowModal(true);
+          setView("finish");
+        }}
+      />
+
+      {showModal && (
+        <Modal className="game-modal">
+          <h1 className="game-modal__title">Memory Game</h1>
+
+          {view === "start" && (
+            <>
+              <p className="game-modal__resume">
+                It is an online memory game. It uses a ranking system to display
+                the top 10 users for each level. The score is initially
+                calculated with 1000 points and is reduced by one point per
+                second. When the game is finished, points are also subtracted
+                based on the number of times a pair of cards was turned over.
+                The game only starts after the user clicks on the first card to
+                flip it.
+              </p>
+
+              <div className="text-center">
+                <button
+                  className="game-modal__btn btn-level selected"
+                  onClick={() => setShowModal((showModal) => !showModal)}
+                >
+                  Got it!
+                </button>
+              </div>
+            </>
+          )}
+
+          {view === "finish" && (
+            <>
+              <p className="game-modal__resume">
+                <div>
+                  Your time:{" "}
+                  <strong>{secondsToTimeFormat(userData.timer)}</strong>
+                </div>
+
+                <div>
+                  Flip count: <strong>{userData.flipCount}</strong>
+                </div>
+
+                <div>
+                  Your score:{" "}
+                  <strong>
+                    {calculateScore({
+                      timeTaken: userData.timer,
+                      pairsMissed: userData.flipCount,
+                    })}
+                  </strong>
+                </div>
+
+                <form
+                  className="form-save-data"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    const { timer, flipCount } = userData;
+
+                    if (name && name.length > 3 && timer && flipCount) {
+                      rankingBuilder.createUser({
+                        name: name.trim(),
+                        score: calculateScore({
+                          timeTaken: timer,
+                          pairsMissed: flipCount,
+                        }),
+                        time: secondsToTimeFormat(timer),
+                      });
+
+                      setNameValid(true);
+                      setShowModal((showModal) => !showModal);
+                    } else {
+                      setNameValid(false);
+                    }
+                  }}
+                >
+                  <input
+                    className={classNames("input-text", { valid: nameValid })}
+                    type="text"
+                    value={name}
+                    onChange={({ target: { value } }) => setName(value)}
+                    placeholder="Insert your name to save on ranking"
+                    required
+                    maxLength={30}
+                  />
+
+                  <button className="btn-level" type="submit">
+                    save
+                  </button>
+                </form>
+
+                <div className="text-center">
+                  <button
+                    className="game-modal__btn btn-level selected"
+                    onClick={() => window.location.reload()}
+                  >
+                    Try again!
+                  </button>
+                </div>
+              </p>
+            </>
+          )}
+        </Modal>
+      )}
+    </>
   );
 }

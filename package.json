@@ -1,5 +1,6 @@
 {
   "name": "memory-game-react",
+  "homepage": "memory-game-js",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,7 +12,7 @@
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.10",
     "classnames": "^2.3.2",
-    "ranking-builder": "^1.1.7",
+    "ranking-builder": "^1.1.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -24,7 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build"
+    "deploy": "yarn build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

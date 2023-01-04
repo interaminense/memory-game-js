@@ -39,3 +39,5 @@ export const cards: Card[] = [
   dream,
   cat2,
 ].map((path) => ({ path, matched: false, flipped: false }));
+
+export const TOP_RESULTS = 20;

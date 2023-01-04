@@ -156,3 +156,48 @@ button.btn-level:active {
   transform: scale(0.97);
   transition: transform 0.2s;
 }
+
+.form-save-data {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+input.input-text {
+  padding: 12px;
+  border-radius: 5px;
+  border: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 16px;
+  min-width: 300px;
+}
+
+input.input-text:not(.valid) {
+  border: 1px solid red;
+}
+
+.game-modal {
+  color: #fff;
+}
+
+.game-modal__title {
+  font-family: "Bungee", cursive;
+  color: #fff;
+  font-size: 28px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.game-modal__resume {
+  font-size: 16px;
+  line-height: 1.5rem;
+}
+
+.game-modal__btn {
+  font-size: 2rem !important;
+  margin-top: 4rem !important;
+}
+
+.text-center {
+  text-align: center;
+}

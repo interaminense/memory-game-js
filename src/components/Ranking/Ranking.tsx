@@ -1,5 +1,6 @@
 import { RankingBuilder, RankingBuilderRenderer } from "ranking-builder";
 import { useEffect, useRef } from "react";
+import { TOP_RESULTS } from "../../constants";
 import { Level } from "../Game/Game";
 
 import "./Ranking.css";
@@ -14,18 +15,20 @@ export function Ranking({
   }>;
 }) {
   const _rankingRef = useRef<HTMLDivElement>(null);
-  const topResults = 10;
+  const _rankingBuilderRenderer = useRef<any>(null);
 
   useEffect(() => {
     if (_rankingRef.current) {
-      new RankingBuilderRenderer({
-        app: _rankingRef.current,
-        rankingBuilder,
-        title: `Top ${topResults} users with ${level.toLowerCase()} level`,
-        topResults,
-      });
+      if (!_rankingBuilderRenderer.current) {
+        _rankingBuilderRenderer.current = new RankingBuilderRenderer({
+          app: _rankingRef.current,
+          rankingBuilder,
+          title: `Top ${TOP_RESULTS} users with ${level.toLowerCase()} level`,
+          topResults: TOP_RESULTS,
+        });
+      }
     }
-  });
+  }, [level, rankingBuilder]);
 
   return <div id="ranking" ref={_rankingRef} />;
 }
