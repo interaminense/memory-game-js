@@ -301,9 +301,13 @@ export function Game({
           if (!cheatActive) {
             setUserData(userData);
             setView("finish");
-          }
 
-          setView("cheatActive");
+            return;
+          } else {
+            setView("cheatActive");
+
+            return;
+          }
         }}
       />
 
