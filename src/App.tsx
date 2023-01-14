@@ -15,7 +15,10 @@ const config = {
 
 function App() {
   const level = getSelectedLevel() as Level;
-  const rankingBuilder = new RankingBuilder({ path: `users` }, config);
+  const rankingBuilder = new RankingBuilder(
+    { path: `memory-game-js/${level}` },
+    config
+  );
 
   // @ts-ignore
   window.rankingBuilder = rankingBuilder;
