@@ -391,7 +391,7 @@ export function Game({
                           timeTaken: timer,
                           pairsMissed: flipCount,
                         }),
-                        time: secondsToTimeFormat(timer),
+                        time: timer,
                         flipCount,
                       });
 
