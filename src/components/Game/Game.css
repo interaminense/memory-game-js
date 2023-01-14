@@ -65,6 +65,11 @@ body {
   overflow: hidden;
 }
 
+.board.showCards .card .card__front-face,
+.board.showCards .card .card__back-face {
+  backface-visibility: visible !important;
+}
+
 .card .card__front-face {
   transform: rotateY(180deg);
 }
@@ -77,6 +82,10 @@ body {
 
 .card .card__back-face {
   background-color: #d9d9e6;
+}
+
+.board.showCards .card .card__back-face {
+  background-color: transparent;
 }
 
 /* Time and Count flip */

@@ -1,5 +1,5 @@
-import { RankingBuilder, RankingBuilderRenderer } from "ranking-builder";
-import { useEffect, useRef } from "react";
+import { RankingBuilder } from "ranking-builder";
+import { RankingBuilderRenderer } from "ranking-builder-react-table-renderer-2";
 import { TOP_RESULTS } from "../../constants";
 import { Level } from "../Game/Game";
 
@@ -10,25 +10,20 @@ export function Ranking({
   rankingBuilder,
 }: {
   level: Level;
-  rankingBuilder: RankingBuilder<{
-    path: string;
-  }>;
+  rankingBuilder: RankingBuilder;
 }) {
-  const _rankingRef = useRef<HTMLDivElement>(null);
-  const _rankingBuilderRenderer = useRef<any>(null);
-
-  useEffect(() => {
-    if (_rankingRef.current) {
-      if (!_rankingBuilderRenderer.current) {
-        _rankingBuilderRenderer.current = new RankingBuilderRenderer({
-          app: _rankingRef.current,
-          rankingBuilder,
-          title: `Top ${TOP_RESULTS} users with ${level.toLowerCase()} level`,
-          topResults: TOP_RESULTS,
-        });
-      }
-    }
-  }, [level, rankingBuilder]);
-
-  return <div id="ranking" ref={_rankingRef} />;
+  return (
+    <RankingBuilderRenderer
+      rankingBuilder={rankingBuilder}
+      title="Memory Game Ranking"
+      topResults={TOP_RESULTS}
+      description={`Top ${TOP_RESULTS} users with ${level.toLowerCase()} level`}
+      customCells={[
+        {
+          header: "Flips",
+          value: "flipCount",
+        },
+      ]}
+    />
+  );
 }

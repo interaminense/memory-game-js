@@ -6,14 +6,13 @@ import {
   mapAssetsByName,
   secondsToTimeFormat,
   shuffle,
+  useCheat,
 } from "../../utils";
 import classNames from "classnames";
 
 import "./Game.css";
 import { RankingBuilder } from "ranking-builder";
-
-// @ts-ignore
-import confetti from "https://cdn.skypack.dev/canvas-confetti@1";
+import confetti from "canvas-confetti";
 import { Modal } from "../Modal/Modal";
 
 export interface Card {
@@ -68,7 +67,7 @@ const levels: TLevels = {
   },
 };
 
-interface IGameContentProps {
+interface IGameContentProps extends React.HTMLAttributes<HTMLElement> {
   cards: { [key: string]: CardWithId };
   level: TLevel;
   onFinish: (userData: { timer: number; flipCount: number }) => void;
@@ -76,6 +75,7 @@ interface IGameContentProps {
 
 const GameContent: React.FC<IGameContentProps> = ({
   cards: initialCards,
+  className,
   level: { columns, size, total, value },
   onFinish,
 }) => {
@@ -222,7 +222,7 @@ const GameContent: React.FC<IGameContentProps> = ({
       </div>
 
       <div
-        className="board"
+        className={classNames("board", className)}
         style={{ gridTemplateColumns: `repeat(${columns}, ${size}px)` }}
       >
         {Object.keys(cards).map((key) => {
@@ -271,9 +271,7 @@ export function Game({
   rankingBuilder,
 }: {
   level: Level;
-  rankingBuilder: RankingBuilder<{
-    path: string;
-  }>;
+  rankingBuilder: RankingBuilder;
 }) {
   const objectLevel = levels[level];
   const duplicatedCards: Card[] = shuffle([
@@ -281,7 +279,7 @@ export function Game({
     ...objectLevel.cards,
   ]);
   const [showModal, setShowModal] = useState(true);
-  const [view, setView] = useState<"start" | "finish">("start");
+  const [view, setView] = useState<"start" | "finish" | "cheatActive">("start");
   const [name, setName] = useState("");
   const [userData, setUserData] = useState<{
     timer: number;
@@ -289,21 +287,47 @@ export function Game({
   }>({ timer: 0, flipCount: 0 });
   const [nameValid, setNameValid] = useState(true);
 
+  const cheatActive = useCheat();
+
   return (
     <>
       <GameContent
+        className={classNames({ showCards: cheatActive })}
         cards={mapAssetsByName(duplicatedCards)}
         level={objectLevel}
         onFinish={(userData) => {
-          setUserData(userData);
           setShowModal(true);
-          setView("finish");
+
+          if (!cheatActive) {
+            setUserData(userData);
+            setView("finish");
+          }
+
+          setView("cheatActive");
         }}
       />
 
       {showModal && (
         <Modal className="game-modal">
           <h1 className="game-modal__title">Memory Game</h1>
+
+          {view === "cheatActive" && (
+            <>
+              <p className="game-modal__resume">
+                The sorcery has turned against the sorcerer and you cannot save
+                your data because of it!
+              </p>
+
+              <div className="text-center">
+                <button
+                  className="game-modal__btn btn-level selected"
+                  onClick={() => window.location.reload()}
+                >
+                  Try again!
+                </button>
+              </div>
+            </>
+          )}
 
           {view === "start" && (
             <>
@@ -364,6 +388,7 @@ export function Game({
                           pairsMissed: flipCount,
                         }),
                         time: secondsToTimeFormat(timer),
+                        flipCount,
                       });
 
                       setNameValid(true);

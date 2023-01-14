@@ -1,5 +1,6 @@
 import { Card, CardWithId, Level } from "./components/Game/Game";
 import { v4 as uuid } from "uuid";
+import { useEffect, useState } from "react";
 
 export function shuffle<T>(array: T[]): T[] {
   let currentIndex = array.length;
@@ -56,4 +57,44 @@ export function calculateScore({
   pairsMissed: number;
 }) {
   return 1000 - pairsMissed - timeTaken || 0;
+}
+
+function canBecomeWord(word: string, desiredWord: string) {
+  word = word.toLowerCase();
+  desiredWord = desiredWord.toLowerCase();
+
+  if (word.length >= desiredWord.length) {
+    return false;
+  }
+
+  if (desiredWord.indexOf(word) === -1) {
+    return false;
+  }
+
+  return true;
+}
+
+export function useCheat() {
+  const spell = "revelio";
+  const [cheat, setCheat] = useState<string>("");
+
+  useEffect(() => {
+    function downHandler({ key }: KeyboardEvent) {
+      if (canBecomeWord(key, spell)) {
+        setCheat(cheat + key);
+      } else {
+        setCheat("");
+      }
+    }
+
+    window.addEventListener("keydown", downHandler);
+
+    return () => {
+      window.removeEventListener("keydown", downHandler);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cheat]);
+
+  return cheat === spell;
 }
