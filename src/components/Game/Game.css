@@ -6,13 +6,6 @@
   --color-secondary: #3f51b5;
 }
 
-/* HTML */
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-}
-
 /* App */
 
 .App {
@@ -27,6 +20,20 @@ body {
   grid-column-gap: 10px;
   grid-row-gap: 10px;
   margin: 0 auto;
+  position: relative;
+}
+
+.board__bonus-card {
+  position: absolute;
+  left: 0;
+  transform: translateX(-110px);
+  top: 0;
+}
+
+.board__bonus-card .board__bonus-card__title {
+  margin-top: 0;
+  font-family: "Bungee", cursive;
+  font-weight: normal;
 }
 
 /* Card */
@@ -67,7 +74,7 @@ body {
 
 .board.showCards .card .card__front-face,
 .board.showCards .card .card__back-face {
-  backface-visibility: visible !important;
+  backface-visibility: visible;
 }
 
 .card .card__front-face {
@@ -80,12 +87,16 @@ body {
   height: 100%;
 }
 
-.card .card__back-face {
+.card .card__back-face,
+.board.showCards .card:not(.flip) .card__front-face {
   background-color: #d9d9e6;
+  filter: grayscale(1);
+  background-blend-mode: soft-light;
 }
 
 .board.showCards .card .card__back-face {
   background-color: transparent;
+  background-image: none !important;
 }
 
 /* Time and Count flip */
@@ -174,9 +185,9 @@ button.btn-level:active {
 input.input-text {
   padding: 12px;
   border-radius: 5px;
-  border: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
+  border: 1px solid #333;
+  background-color: rgb(255 255 255 / 50%);
+  color: #333;
   font-size: 16px;
   min-width: 300px;
 }
@@ -200,6 +211,33 @@ input.input-text:not(.valid) {
 .game-modal__resume {
   font-size: 16px;
   line-height: 1.5rem;
+  background-color: #fff;
+  color: #333;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.game-modal__resume__title {
+  font-family: "Bungee", cursive;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.game-modal__resume__bonus-card {
+  position: absolute;
+  left: -100px;
+  top: 4px;
+}
+
+.game-bonus-card__image {
+  width: 100px;
+  height: 100px;
+  animation: border 1s linear infinite;
+  border-radius: 4px;
 }
 
 .game-modal__btn {
@@ -209,4 +247,16 @@ input.input-text:not(.valid) {
 
 .text-center {
   text-align: center;
+}
+
+@keyframes border {
+  0% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 40px 0 #3f51b5;
+  }
+  100% {
+    box-shadow: 0 0 80px 0 transparent;
+  }
 }

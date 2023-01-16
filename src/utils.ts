@@ -1,6 +1,7 @@
 import { Card, CardWithId, Level } from "./components/Game/Game";
 import { v4 as uuid } from "uuid";
 import { useEffect, useState } from "react";
+import { CARDS_PATH, MAX_CARDS, EXTRA_POINT, CHEAT_KEYWORD } from "./constants";
 
 export function shuffle<T>(array: T[]): T[] {
   let currentIndex = array.length;
@@ -52,11 +53,15 @@ export function getSelectedLevel(): string {
 export function calculateScore({
   timeTaken,
   pairsMissed,
+  bonus,
 }: {
   timeTaken: number;
   pairsMissed: number;
+  bonus: boolean;
 }) {
-  return 1000 - pairsMissed - timeTaken || 0;
+  const result = 1000 - pairsMissed - timeTaken || 0;
+
+  return bonus ? result + EXTRA_POINT : result;
 }
 
 function canBecomeWord(word: string, desiredWord: string) {
@@ -75,12 +80,13 @@ function canBecomeWord(word: string, desiredWord: string) {
 }
 
 export function useCheat() {
-  const spell = "revelio";
   const [cheat, setCheat] = useState<string>("");
 
   useEffect(() => {
+    if (cheat === CHEAT_KEYWORD) return;
+
     function downHandler({ key }: KeyboardEvent) {
-      if (canBecomeWord(key, spell)) {
+      if (canBecomeWord(key, CHEAT_KEYWORD)) {
         setCheat(cheat + key);
       } else {
         setCheat("");
@@ -96,5 +102,33 @@ export function useCheat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cheat]);
 
-  return cheat === spell;
+  return cheat === CHEAT_KEYWORD;
+}
+
+export function randomNumber(maxNumber: number) {
+  return Math.floor(Math.random() * maxNumber) + 1;
+}
+
+function randomArray(total: number): number[] {
+  const numbers = [];
+
+  while (numbers.length < MAX_CARDS) {
+    const number = randomNumber(MAX_CARDS);
+
+    numbers.indexOf(number) === -1 && numbers.push(number);
+  }
+
+  return numbers.slice(0, total);
+}
+
+export function getPath(number: number) {
+  return `${CARDS_PATH}/image${number}.webp`;
+}
+
+export function getCards(totalCards: number) {
+  return randomArray(totalCards).map((number) => ({
+    path: getPath(number),
+    matched: false,
+    flipped: false,
+  }));
 }

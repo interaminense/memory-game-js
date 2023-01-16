@@ -23,6 +23,10 @@ export function Ranking({
           header: "Flips",
           value: "flipCount",
         },
+        {
+          header: "Bonus",
+          value: "bonus",
+        },
       ]}
     />
   );
