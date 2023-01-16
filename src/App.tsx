@@ -21,7 +21,7 @@ function App() {
   );
 
   // @ts-ignore
-  window.rankingBuilder = rankingBuilder;
+  // window.rankingBuilder = rankingBuilder;
 
   return (
     <div className="App">
