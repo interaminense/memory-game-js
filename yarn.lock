@@ -7858,10 +7858,10 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
-ranking-builder-react-table-renderer-2@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/ranking-builder-react-table-renderer-2/-/ranking-builder-react-table-renderer-2-1.0.2.tgz#e08cca37cbdc34f72cf2bd98bf7cb6fc6e97a969"
-  integrity sha512-b/0dAyYfu9Gip9h+hKJT/oh32NzpxKqOMYkTp9ckj43w8aRv7JRkUV2qvu0sNqMHh77Nd1Xz9k9BE3p14WT7Gw==
+ranking-builder-react-table-renderer-2@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/ranking-builder-react-table-renderer-2/-/ranking-builder-react-table-renderer-2-1.0.3.tgz#2e058a0fd6da808428c77150cdd652fc1af864cd"
+  integrity sha512-CzyKwMDQM97u/QrX3UDrHvIBeQaDXfNpeeFwIJN1oZ8OsLW4o3rgP4nsqcVNxat4eevfw5jWlMG1gTjlxkCiCA==
   dependencies:
     "@types/react" "^18.0.26"
     "@types/react-dom" "^18.0.10"
