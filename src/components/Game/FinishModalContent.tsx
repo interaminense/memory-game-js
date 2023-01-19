@@ -67,7 +67,7 @@ export const FinishModalContent: React.FC<IFinishModalContentProps> = ({
                 }),
                 time: timer,
                 flipCount,
-                bonus: bonus ? `+${EXTRA_POINT}` : "0",
+                bonus: bonus ? EXTRA_POINT : 0,
               });
 
               setValidName(true);
