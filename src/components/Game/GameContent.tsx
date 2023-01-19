@@ -1,6 +1,6 @@
 import confetti from "canvas-confetti";
 import classNames from "classnames";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { secondsToTimeFormat } from "../../utils";
 import { BonusCard } from "../BonusCard/BonusCard";
 import { CardWithId, levels, TLevel, UserData } from "./Game";
@@ -29,29 +29,24 @@ export const GameContent: React.FC<IGameContentProps> = ({
     initialCards
   );
   const [bonus, setbonus] = useState(false);
+  const timerInterval = useRef<any>(null);
 
   useEffect(() => {
-    let timerInterval: any;
-
     if (startTimer) {
-      timerInterval = setInterval(() => {
+      timerInterval.current = setInterval(() => {
         setTimer((timer) => {
-          if (remainingPairs === 0) {
-            clearInterval(timerInterval);
-
-            return timer;
-          }
-
           return timer + 1;
         });
       }, 1000);
     }
 
-    return () => clearInterval(timerInterval);
-  }, [remainingPairs, startTimer]);
+    return () => clearInterval(timerInterval.current);
+  }, [startTimer]);
 
   useEffect(() => {
     if (remainingPairs === 0) {
+      clearInterval(timerInterval.current);
+
       setTimeout(() => onFinish({ timer, flipCount, bonus }), 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -204,13 +199,15 @@ export const GameContent: React.FC<IGameContentProps> = ({
               style={{ width: size, height: size }}
             >
               <div className="card__content">
-                <div
-                  className="card__front-face"
-                  style={{
-                    backgroundImage: `url(${path})`,
-                    backgroundSize: size,
-                  }}
-                />
+                {flipped && (
+                  <div
+                    className="card__front-face"
+                    style={{
+                      backgroundImage: `url(${path})`,
+                      backgroundSize: size,
+                    }}
+                  />
+                )}
                 <div
                   className="card__back-face"
                   style={{

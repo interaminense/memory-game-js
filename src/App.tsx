@@ -1,5 +1,6 @@
 import { RankingBuilder } from "ranking-builder";
 import { Game, Level } from "./components/Game/Game";
+import { Hackers } from "./components/Hackers/Hackers";
 import { Ranking } from "./components/Ranking/Ranking";
 import { getSelectedLevel } from "./utils";
 
@@ -20,11 +21,14 @@ function App() {
     config
   );
 
-  // @ts-ignore
-  // window.rankingBuilder = rankingBuilder;
+  if (process.env.NODE_ENV === "development") {
+    // @ts-ignore
+    window.rankingBuilder = rankingBuilder;
+  }
 
   return (
     <div className="App">
+      <Hackers />
       <Game level={level} rankingBuilder={rankingBuilder} />
       <Ranking level={level} rankingBuilder={rankingBuilder} />
     </div>

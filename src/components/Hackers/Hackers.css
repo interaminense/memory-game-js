@@ -1,0 +1,15 @@
+.hackers {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  max-width: 220px;
+  padding: 1rem;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+}
+
+.hackers__title {
+  margin: 0;
+  font-family: "Bungee", cursive;
+  font-weight: normal;
+}

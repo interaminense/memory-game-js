@@ -7858,32 +7858,24 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
-ranking-builder-react-table-renderer-2@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/ranking-builder-react-table-renderer-2/-/ranking-builder-react-table-renderer-2-1.0.1.tgz#ef9244326f3ec0af6db51cb7980d0f8017da9ba6"
-  integrity sha512-uRgG4sfP/MLR98FEh6ERyvrEM/Jalpa//Lft/Iw1Jly67u0SikUHu+HyjNeZQS/hA4r8dpON1XXvwBvvsSqUDw==
+ranking-builder-react-table-renderer-2@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ranking-builder-react-table-renderer-2/-/ranking-builder-react-table-renderer-2-1.0.2.tgz#e08cca37cbdc34f72cf2bd98bf7cb6fc6e97a969"
+  integrity sha512-b/0dAyYfu9Gip9h+hKJT/oh32NzpxKqOMYkTp9ckj43w8aRv7JRkUV2qvu0sNqMHh77Nd1Xz9k9BE3p14WT7Gw==
   dependencies:
     "@types/react" "^18.0.26"
     "@types/react-dom" "^18.0.10"
     classnames "^2.3.2"
-    ranking-builder "^1.2.4"
+    ranking-builder "^1.2.6"
     react "^18.2.0"
     react-dom "^18.2.0"
     uuid "^9.0.0"
     vite-plugin-css-injected-by-js "^2.3.1"
 
-ranking-builder@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/ranking-builder/-/ranking-builder-1.2.4.tgz#02ededf038886c7cb1295f334b9abaf9e496b0d2"
-  integrity sha512-Z+ej075dsVzJrJQI3WkigaDeDOe5hT1tOH4E+eYOV81/7b8nCWrJla6bG8JBnZ7v97u44gP1XTsmGkc6XvtLKQ==
-  dependencies:
-    "@types/uuid" "^9.0.0"
-    firebase "^9.15.0"
-
-ranking-builder@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/ranking-builder/-/ranking-builder-1.2.5.tgz#da05932576c0f12e922eb423e8f130d5736f7538"
-  integrity sha512-5eAj2BG/sCBmZnPFG7gKZLkc1gy+Oz93wCbxxFiRSJ3jBnB8zWYqViHGJob6K4RvUx9SfmoPRPIv2n46RXQIig==
+ranking-builder@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/ranking-builder/-/ranking-builder-1.2.6.tgz#ae17be37c68856d3fea8b8481bc5704f5a63e8f3"
+  integrity sha512-rFgxcFajAiKeLo7U3h1nbyyW06LAPVG0kDK/e1TyuHCyHkBSLjUz72OzNCRyDTRf2Uudx427G9qOoh57cHsovw==
   dependencies:
     "@types/uuid" "^9.0.0"
     firebase "^9.15.0"
