@@ -102,6 +102,7 @@ export function Game({
   return (
     <>
       <GameContent
+        activeCheat={activeCheat}
         bonusCardPath={bonusCardPath}
         className={classNames({ showCards: activeCheat })}
         cards={mapAssetsByName(shuffle([...level.cards, ...level.cards]))}

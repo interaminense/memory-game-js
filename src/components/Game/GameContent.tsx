@@ -6,6 +6,7 @@ import { BonusCard } from "../BonusCard/BonusCard";
 import { CardWithId, levels, TLevel, UserData } from "./Game";
 
 interface IGameContentProps extends React.HTMLAttributes<HTMLElement> {
+  activeCheat: boolean;
   bonusCardPath: string;
   cards: { [key: string]: CardWithId };
   level: TLevel;
@@ -13,6 +14,7 @@ interface IGameContentProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const GameContent: React.FC<IGameContentProps> = ({
+  activeCheat,
   bonusCardPath,
   cards: initialCards,
   className,
@@ -199,7 +201,7 @@ export const GameContent: React.FC<IGameContentProps> = ({
               style={{ width: size, height: size }}
             >
               <div className="card__content">
-                {flipped && (
+                {(flipped || activeCheat) && (
                   <div
                     className="card__front-face"
                     style={{
