@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/memory-game-js/static/css/main.7df76477.css",
-    "main.js": "/memory-game-js/static/js/main.293a14ed.js",
+    "main.js": "/memory-game-js/static/js/main.370d2c7a.js",
     "static/js/27.5842bcc1.chunk.js": "/memory-game-js/static/js/27.5842bcc1.chunk.js",
     "index.html": "/memory-game-js/index.html"
   },
   "entrypoints": [
     "static/css/main.7df76477.css",
-    "static/js/main.293a14ed.js"
+    "static/js/main.370d2c7a.js"
   ]
 }
