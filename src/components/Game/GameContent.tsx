@@ -1,14 +1,14 @@
 import confetti from "canvas-confetti";
 import classNames from "classnames";
 import { useState, useEffect, useRef } from "react";
-import { secondsToTimeFormat } from "../../utils";
+import { decrypt, getSecretKey, secondsToTimeFormat } from "../../utils";
 import { BonusCard } from "../BonusCard/BonusCard";
-import { CardWithId, levels, TLevel, UserData } from "./Game";
+import { FormattedCard, levels, TLevel, UserData } from "./Game";
 
 interface IGameContentProps extends React.HTMLAttributes<HTMLElement> {
   activeCheat: boolean;
   bonusCardPath: string;
-  cards: { [key: string]: CardWithId };
+  cards: { [key: string]: FormattedCard };
   level: TLevel;
   onFinish: (userData: UserData) => void;
 }
@@ -26,8 +26,8 @@ export const GameContent: React.FC<IGameContentProps> = ({
   const [startTimer, setStartTimer] = useState(false);
   const [flipCount, setFlipCount] = useState(0);
   const [remainingPairs, setRemainingPairs] = useState(total);
-  const [firstCard, setFirstCard] = useState<CardWithId | null>(null);
-  const [cards, setCards] = useState<{ [key: string]: CardWithId }>(
+  const [firstCard, setFirstCard] = useState<FormattedCard | null>(null);
+  const [cards, setCards] = useState<{ [key: string]: FormattedCard }>(
     initialCards
   );
   const [bonus, setbonus] = useState(false);
@@ -55,7 +55,8 @@ export const GameContent: React.FC<IGameContentProps> = ({
   }, [flipCount, remainingPairs, timer]);
 
   const onCardClick = (
-    card: CardWithId,
+    card: FormattedCard,
+    secretKey: string,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     setLock(true);
@@ -65,6 +66,7 @@ export const GameContent: React.FC<IGameContentProps> = ({
       const firstCard = {
         ...card,
         flipped: true,
+        secretKey,
       };
 
       setFirstCard(firstCard);
@@ -86,7 +88,10 @@ export const GameContent: React.FC<IGameContentProps> = ({
       },
     });
 
-    if (firstCard.path === card.path && firstCard.id !== card.id) {
+    const cardPath = decrypt(card.id, secretKey);
+    const firstCardPath = decrypt(firstCard.id, firstCard.secretKey as string);
+
+    if (firstCardPath === cardPath && firstCard.id !== card.id) {
       let confettiParticles = {
         gravity: 3,
         decay: 0.95,
@@ -98,7 +103,7 @@ export const GameContent: React.FC<IGameContentProps> = ({
         spread: 100,
       };
 
-      if (card.path === bonusCardPath) {
+      if (cardPath === bonusCardPath) {
         setbonus(true);
 
         confettiParticles = {
@@ -183,9 +188,9 @@ export const GameContent: React.FC<IGameContentProps> = ({
 
           <BonusCard path={bonusCardPath} />
         </div>
-
-        {Object.keys(cards).map((key) => {
-          const { flipped, id, matched, path } = cards[key];
+        {Object.keys(cards).map((key, index) => {
+          const { flipped, id, matched } = cards[key];
+          const secretKey = getSecretKey(index);
 
           return (
             <div
@@ -196,7 +201,7 @@ export const GameContent: React.FC<IGameContentProps> = ({
               onClick={
                 firstCard?.id === id || matched || lock
                   ? () => {}
-                  : (event) => onCardClick(cards[key], event)
+                  : (event) => onCardClick(cards[key], secretKey, event)
               }
               style={{ width: size, height: size }}
             >
@@ -205,7 +210,7 @@ export const GameContent: React.FC<IGameContentProps> = ({
                   <div
                     className="card__front-face"
                     style={{
-                      backgroundImage: `url(${path})`,
+                      backgroundImage: `url(${decrypt(id, secretKey)})`,
                       backgroundSize: size,
                     }}
                   />

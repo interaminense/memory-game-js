@@ -1,7 +1,7 @@
-import { Card, CardWithId, Level } from "./components/Game/Game";
-import { v4 as uuid } from "uuid";
+import { Card, FormattedCard, Level } from "./components/Game/Game";
 import { useEffect, useState } from "react";
 import { CARDS_PATH, MAX_CARDS, EXTRA_POINT, CHEAT_KEYWORD } from "./constants";
+import CryptoJS from "crypto-js";
 
 export function shuffle<T>(array: T[]): T[] {
   let currentIndex = array.length;
@@ -20,17 +20,27 @@ export function shuffle<T>(array: T[]): T[] {
   return array;
 }
 
-export function mapAssetsByName(cards: Card[]): { [key: string]: CardWithId } {
-  return cards.reduce((acc: { [key: string]: CardWithId }, card) => {
-    const id = uuid();
+export function mapAssetsByName(cards: Card[]): {
+  [key: string]: FormattedCard;
+} {
+  return cards.reduce(
+    (
+      acc: { [key: string]: FormattedCard },
+      { path, flipped, matched },
+      index
+    ) => {
+      const id = encrypt(path, getSecretKey(index));
 
-    acc[id] = {
-      ...card,
-      id,
-    };
+      acc[id] = {
+        flipped,
+        matched,
+        id,
+      };
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {}
+  );
 }
 
 export function secondsToTimeFormat(seconds: number) {
@@ -153,4 +163,16 @@ export function disableReactDevTools() {
           : null;
     }
   }
+}
+
+export function encrypt(str: string, key: string) {
+  return CryptoJS.AES.encrypt(str, key).toString();
+}
+
+export function decrypt(encryptedStr: string, key: string) {
+  return CryptoJS.AES.decrypt(encryptedStr, key).toString(CryptoJS.enc.Utf8);
+}
+
+export function getSecretKey(index: number) {
+  return `${process.env.REACT_APP_CARD_PATH_SECRET_KEY}-${index + 1}`;
 }

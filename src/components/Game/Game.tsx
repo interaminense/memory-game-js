@@ -25,8 +25,11 @@ export interface Card {
   path: string;
 }
 
-export interface CardWithId extends Card {
+export interface FormattedCard {
+  flipped: boolean;
   id: string;
+  matched: boolean;
+  secretKey?: string;
 }
 
 export enum Level {
